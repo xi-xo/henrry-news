@@ -1,4 +1,4 @@
-const readTopics  = require('../models.topic/topic.model');
+const readTopics  = require('../models/topic.model');
 
 const getTopics = (request, response) => {
     readTopics()
