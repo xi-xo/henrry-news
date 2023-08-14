@@ -3,7 +3,7 @@ const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/index');
 const connection = require('../db/connection');
 const request = require('supertest');
-const { forEach } = require('../db/data/test-data/articles');
+const endpoints = require('../endpoints.json')
 
 afterAll(() => {
     return connection.end();
@@ -18,17 +18,25 @@ describe("/api/topics", () => {
         return request(app).get("/api/topics").expect(200)
     });
     test('"200: responds with an array of topic objects"', () => {
-        return request(app).get("/api/topics").expect(200)
+        return request(app).get("/api/topics")
         .then(({ body }) => {
-            const topics = body.rows
+            const topics = body.topics.rows
+            console.log(topics);
             expect(Array.isArray(topics)).toBe(true)
-
+            expect(topics.length).toBe(topics.length)
             topics.forEach((topic) => {
                 expect(topic).toHaveProperty('slug')
                 expect(topic).toHaveProperty('description')
             })
-            
-            
         })
     });
+    describe('api endpoints', () => {
+        test('200: responds with an object describing all avaiable endpoints', () => {
+            return request(app).get("/api").expect(200)
+            .then(({ body }) => {
+                expect(body).toEqual(endpoints)
+            })
+        });
+    });
+    
 });
