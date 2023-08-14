@@ -4,6 +4,7 @@ const data = require('../db/data/test-data/index');
 const connection = require('../db/connection');
 const request = require('supertest');
 const endpoints = require('../endpoints.json')
+const apiController = require('../api.controller')
 
 afterAll(() => {
     return connection.end();
@@ -20,7 +21,7 @@ describe("/api/topics", () => {
     test('"200: responds with an array of topic objects"', () => {
         return request(app).get("/api/topics")
         .then(({ body }) => {
-            const topics = body.topics.rows
+            const topics = body.topics
             console.log(topics);
             expect(Array.isArray(topics)).toBe(true)
             expect(topics.length).toBe(topics.length)
