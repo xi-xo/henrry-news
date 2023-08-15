@@ -1,10 +1,12 @@
 const db = require('../db/connection')
 
 const readArticles = () => {
-    return db.query(`SELECT * FROM articles`).then((rows) => {
-        console.log(rows);
+    return db.query('SELECT * FROM articles').then(({ rows }) => {
         return rows
     })
 };
 
-module.exports = readArticles;
+const getArticleById = (articleId) => {
+    return db.query(`SELECT * FROM articles WHERE article_id = $1`, [articleId])
+}
+module.exports = { readArticles, getArticleById };
