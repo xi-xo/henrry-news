@@ -3,7 +3,8 @@ const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/index');
 const connection = require('../db/connection');
 const request = require('supertest');
-const endpoints = require('../endpoints.json')
+const endpoints = require('../endpoints.json');
+const apiController = require('../api.controller')
 
 afterAll(() => {
     return connection.end();
@@ -25,15 +26,15 @@ describe("/api/topics", () => {
             topics.forEach((topic) => {
                 expect(topic).toHaveProperty('slug')
                 expect(topic).toHaveProperty('description')
-            })
-        })
+            });
+        });
     });
     describe('api endpoints', () => {
         test('200: responds with an object describing all avaiable endpoints', () => {
             return request(app).get("/api").expect(200)
             .then(({ body }) => {
                 expect(body).toEqual(endpoints)
-            })
+            });
         });
     });
     describe('/api/articles/:article_id', () => {
