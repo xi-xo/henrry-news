@@ -16,11 +16,11 @@ const getArticleByIdController = (request, response) => {
 const articleId = parseInt(article_id, 10);
 
     getArticleById(articleId)
-    .then(({ rows, rowCount }) => {
-        if(rowCount === 0) {
-            response.status(404).send({ msg: 'Article not found'})
+    .then((article) => {
+        if (!article) {
+            response.status(404).send({ msg: 'Article not found' });
         } else {
-            response.status(200).send({ articles : rows[0] })
+            response.status(200).send({ article });
         }
     })
     

@@ -40,11 +40,11 @@ describe("/api/topics", () => {
         test("200: response with a status of 200", () => {
             return request(app).get("/api/articles").expect(200)
         });
-        test('200: should return articles objects', () => {
+        test('200: should return a specific article by ID', () => {
             return request(app).get('/api/articles/1')
             .then(({ body }) => {
-                const articles = body.articles
-                expect(articles).toMatchObject({
+                const article = body.article
+                expect(article).toMatchObject({
                     author: expect.any(String),
                     title: expect.any(String),
                     article_id: 1,
