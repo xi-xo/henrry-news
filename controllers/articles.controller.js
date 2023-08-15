@@ -1,8 +1,6 @@
 
 const { readArticles, getArticleById }  = require('../models/articles.model');
 
-
-
 const getArticles = (request, response) => {
     readArticles().then((articles) => {
         response.status(200).send({articles})

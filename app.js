@@ -1,10 +1,8 @@
 const express = require('express')
 const app = express()
 const getTopics  = require('./controllers/topic.controller')
-
 const { getArticles, getArticleByIdController} = require('./controllers/articles.controller')
 const apiController = require('./api.controller')
-
 
 
 app.get("/api/topics", getTopics)
