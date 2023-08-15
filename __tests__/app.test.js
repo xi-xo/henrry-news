@@ -20,8 +20,7 @@ describe("/api/topics", () => {
     test('"200: responds with an array of topic objects"', () => {
         return request(app).get("/api/topics")
         .then(({ body }) => {
-            const topics = body.topics.rows
-            console.log(topics);
+            const topics = body.topics
             expect(Array.isArray(topics)).toBe(true)
             expect(topics.length).toBe(topics.length)
             topics.forEach((topic) => {
@@ -38,5 +37,9 @@ describe("/api/topics", () => {
             })
         });
     });
-    
+    describe('/api/articles/:article_id', () => {
+        test('200: should be available', () => {
+            return request(app).get('/api/articles')
+        });
+    });
 });
