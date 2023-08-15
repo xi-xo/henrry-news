@@ -4,7 +4,6 @@ const data = require('../db/data/test-data/index');
 const connection = require('../db/connection');
 const request = require('supertest');
 const endpoints = require('../endpoints.json');
-const apiController = require('../api.controller')
 
 afterAll(() => {
     return connection.end();
@@ -64,6 +63,25 @@ describe("/api/topics", () => {
             .then(({ body }) => {
                 const msg = body.msg
                 expect(msg).toBe('Article not found')
+            })
+        });
+    });
+    describe('/api/articles ticket 5', () => {
+        test('200: responds with an array of articles with enhanced properties', () => {
+            return request(app).get('/api/articles').expect(200)
+            .then(({ body }) => {
+                const articles = body.articles
+                expect(Array.isArray(articles)).toBe(true)
+                expect(articles.length).toBe(13)
+                articles.forEach(article => {
+                    expect(article).toHaveProperty('author')
+                    expect(article).toHaveProperty('title')
+                    expect(article).toHaveProperty('article_id')
+                    expect(article).toHaveProperty('topic')
+                    expect(article).toHaveProperty('created_at')
+                    expect(article).toHaveProperty('votes')
+                    expect(article).toHaveProperty('article_img_url')
+                })
             })
         });
     });
