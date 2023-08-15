@@ -38,8 +38,11 @@ describe("/api/topics", () => {
         });
     });
     describe('/api/articles/:article_id', () => {
-        test('200: should be available', () => {
-            return request(app).get('/api/articles')
+        test('200: should return articles objects', () => {
+            return request(app).get('/api/articles/1').expect(200)
+            .then(() => {
+                
+            })
         });
     });
 });
