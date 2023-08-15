@@ -4,6 +4,7 @@ const data = require('../db/data/test-data/index');
 const connection = require('../db/connection');
 const request = require('supertest');
 const endpoints = require('../endpoints.json');
+const apiController = require('../api.controller')
 
 afterAll(() => {
     return connection.end();
