@@ -70,8 +70,6 @@ describe("/api/topics", () => {
                 expect(msg).toBe('Bad request')
             })
         });
-    });
-    describe('/api/articles ticket 5', () => {
         test('200: responds with an array of articles with enhanced properties', () => {
             return request(app).get('/api/articles').expect(200)
             .then(({ body }) => {
@@ -103,5 +101,9 @@ describe("/api/topics", () => {
                 expect(msg).toBe('Bad request')
             })
         });
+        
+    });
+    describe('/api/articles ticket 5', () => {
+        test('', () => {});
     });
 });
