@@ -70,6 +70,9 @@ describe("/api/topics", () => {
                 expect(msg).toBe('Bad request')
             })
         });
+        
+    });
+    describe('/api/articles ticket 5', () => {
         test('200: responds with an array of articles with enhanced properties', () => {
             return request(app).get('/api/articles').expect(200)
             .then(({ body }) => {
@@ -87,23 +90,5 @@ describe("/api/topics", () => {
                 })
             })
         });
-        test('404: should return 404 when article does not exist', () => {
-            return request(app).get('/api/articles/999').expect(404)
-            .then(({ body }) => {
-                const msg = body.msg
-                expect(msg).toBe('Article not found')
-            })
-        });
-        test('400: should return 400 when article ID is invalid', () => {
-            return request(app).get('/api/articles/bananas').expect(400)
-            .then(({ body }) => {
-                const msg = body.msg;
-                expect(msg).toBe('Bad request')
-            })
-        });
-        
-    });
-    describe('/api/articles ticket 5', () => {
-        test('', () => {});
     });
 });

@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const handle400errors = require('./controllers/error.controller')
 const getTopics  = require('./controllers/topic.controller')
 const { getArticles, getArticleByIdController} = require('./controllers/articles.controller')
 const apiController = require('./api.controller')
@@ -9,6 +10,8 @@ app.get("/api/topics", getTopics)
 app.get("/api/articles", getArticles)
 app.get("/api", apiController)
 app.get('/api/articles/:article_id', getArticleByIdController)
+
+app.use(handle400errors)
 
 app.use((err, request, response, next) => {
     console.log(err);
