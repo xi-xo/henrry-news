@@ -89,5 +89,19 @@ describe("/api/topics", () => {
                 })
             })
         });
+        test('404: should return 404 when article does not exist', () => {
+            return request(app).get('/api/articles/999').expect(404)
+            .then(({ body }) => {
+                const msg = body.msg
+                expect(msg).toBe('Article not found')
+            })
+        });
+        test('400: should return 400 when article ID is invalid', () => {
+            return request(app).get('/api/articles/bananas').expect(400)
+            .then(({ body }) => {
+                const msg = body.msg;
+                expect(msg).toBe('Bad request')
+            })
+        });
     });
 });
