@@ -1,10 +1,21 @@
-const { readArticles, getArticleById }  = require('../models/articles.model');
+const { readArticles, getArticleById, readComments }  = require('../models/articles.model');
 
 const getArticles = (request, response) => {
     readArticles().then((articles) => {
-        response.status(200).send({articles})
+        const articlesWithoutBody = articles.map((article) => {
+            const { body, ...articleWithoutBody } = article;
+            return articleWithoutBody;
+        });
+        response.status(200).send({ articles: articlesWithoutBody });
+    });
+}
+
+const getComments = (request, response) => {
+    readComments().then((comments) => {
+        response.status(200).send(comments)
     })
 }
+
 
 const getArticleByIdController = (request, response, next) => {
     const { article_id } = request.params;
@@ -18,4 +29,4 @@ const getArticleByIdController = (request, response, next) => {
 }
 
 
-module.exports = { getArticles, getArticleByIdController };
+module.exports = { getArticles, getArticleByIdController, getComments };

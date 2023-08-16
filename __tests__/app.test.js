@@ -73,6 +73,9 @@ describe("/api/topics", () => {
         
     });
     describe('/api/articles ticket 5', () => {
+        test('200: response with status 200', () => {
+            return request(app).get('/api/comments').expect(200)
+        });
         test('200: responds with an array of articles with enhanced properties', () => {
             return request(app).get('/api/articles').expect(200)
             .then(({ body }) => {
@@ -87,6 +90,16 @@ describe("/api/topics", () => {
                     expect(article).toHaveProperty('created_at')
                     expect(article).toHaveProperty('votes')
                     expect(article).toHaveProperty('article_img_url')
+                    expect(article).toHaveProperty('comment_count')
+                })
+            })
+        });  
+        test('returns articles with no body property', () => {
+            return request(app).get('/api/articles')
+            .then(({ body }) => {
+                const articles = body.articles
+                articles.forEach((article) => {
+                    expect(article).not.toHaveProperty('body')
                 })
             })
         });
