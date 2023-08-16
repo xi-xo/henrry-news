@@ -72,7 +72,7 @@ describe("/api/topics", () => {
         });
     });
     describe('/api/articles ticket 5', () => {
-        test.only('200: responds with an array of articles with enhanced properties', () => {
+        test('200: responds with an array of articles with enhanced properties', () => {
             return request(app).get('/api/articles').expect(200)
             .then(({ body }) => {
                 const articles = body.articles
