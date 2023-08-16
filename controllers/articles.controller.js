@@ -1,14 +1,10 @@
-
 const { readArticles, getArticleById }  = require('../models/articles.model');
-
-
 
 const getArticles = (request, response) => {
     readArticles().then((articles) => {
         response.status(200).send({articles})
     })
 }
-
 
 const getArticleByIdController = (request, response) => {
     const { article_id } = request.params;
@@ -17,7 +13,6 @@ const getArticleByIdController = (request, response) => {
         return;
     }
 const articleId = parseInt(article_id, 10);
-
     getArticleById(articleId)
     .then((article) => {
         if (!article) {
