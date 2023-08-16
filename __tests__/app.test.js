@@ -104,4 +104,9 @@ describe("/api/topics", () => {
             })
         });
     });
+    describe('/api/articles/:article_id/comments ticket 6', () => {
+        test('200: responds with an array of comments for a given article_id', () => {
+            return request(app).get('/api/articles/1/comments').expect(200)
+        });
+    });
 });
