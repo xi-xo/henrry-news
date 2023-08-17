@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const handle400errors = require('./controllers/error.controller')
+const { handleCustomErrors, handlePSQLErrors} = require('./controllers/error.controller')
 const getTopics  = require('./controllers/topic.controller')
 const { getArticles, getArticleByIdController, getCommentsArticlesController} = require('./controllers/articles.controller')
 const getComments = require('./controllers/comments.controller')
@@ -15,7 +15,8 @@ app.get("/api/articles/:article_id/comments", getComments)
 app.get("/api/comments", getCommentsArticlesController)
 
 
-app.use(handle400errors)
+app.use(handleCustomErrors)
+app.use(handlePSQLErrors)
 
 app.use((err, request, response, next) => {
     console.log(err);
