@@ -2,11 +2,7 @@ const { readArticles, getArticleById, readComments }  = require('../models/artic
 
 const getArticles = (request, response) => {
     readArticles().then((articles) => {
-        const articlesWithoutBody = articles.map((article) => {
-            const { body, ...articleWithoutBody } = article;
-            return articleWithoutBody;
-        });
-        response.status(200).send({ articles: articlesWithoutBody });
+        return response.status(200).send({ articles });
     });
 }
 
