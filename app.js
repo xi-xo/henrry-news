@@ -11,7 +11,7 @@ app.get("/api/topics", getTopics)
 app.get("/api/articles", getArticles)
 app.get("/api", apiController)
 app.get('/api/articles/:article_id', getArticleByIdController)
-app.get("/api/articles/:articles/comments", getComments)
+app.get("/api/articles/:article_id/comments", getComments)
 app.get("/api/comments", getCommentsArticlesController)
 
 
