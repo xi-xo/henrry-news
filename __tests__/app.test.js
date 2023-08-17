@@ -121,12 +121,12 @@ describe("/api/topics", () => {
                 })
             })
         });
-        test('404: should return 404 when article has not comments', () => {
-            return request(app).get('/api/articles/2/comments').expect(404)
+        test('200: should return an empty array when article has no comments', () => {
+            return request(app).get('/api/articles/2/comments').expect(200)
             .then(({ body }) => {
-                const msg = body.msg
-                const errorMsg = 'No comments found for article with ID 2'
-                expect(msg).toBe(errorMsg)
+                console.log(body);
+                expect(Array.isArray(body)).toBe(true)
+                expect(body.length).toBe(0);
             })
         });
         test('400: should return 400 when article ID is invalid', () => {
