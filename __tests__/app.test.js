@@ -4,8 +4,7 @@ const data = require('../db/data/test-data/index');
 const connection = require('../db/connection');
 const request = require('supertest');
 const endpoints = require('../endpoints.json');
-const { toBeSortedBy } = require('jest-sorted');
-
+const toBeSortedBy = require('jest-sorted');
 
 
 afterAll(() => {
@@ -110,6 +109,45 @@ describe("/api/topics", () => {
                         expect(article).not.toHaveProperty('body')
                     })
                 })
+        });
+    });
+    describe('/api/articles/:article_id/comments ticket 6', () => {
+        test('200: responds with an array of comments for a given article_id', () => {
+            return request(app).get('/api/articles/1/comments').expect(200)
+            .then(({ body }) => {
+                const comments = body
+                expect(Array.isArray(comments)).toBe(true)
+                comments.forEach((comment) => {
+                    expect(comment).toHaveProperty('comment_id')
+                    expect(comment).toHaveProperty('votes')
+                    expect(comment).toHaveProperty('created_at')
+                    expect(comment).toHaveProperty('author')
+                    expect(comment).toHaveProperty('body')
+                    expect(comment).toHaveProperty('article_id')
+                })
+            })
+        });
+        test('200: should return an empty array when article has no comments', () => {
+            return request(app).get('/api/articles/2/comments').expect(200)
+            .then(({ body }) => {
+                console.log(body);
+                expect(Array.isArray(body)).toBe(true)
+                expect(body.length).toBe(0);
+            })
+        });
+        test('400: should return 400 when article ID is invalid', () => {
+            return request(app).get('/api/articles/banana/comments').expect(400)
+            .then(({ body }) => {
+                const msg = body.msg
+                expect(msg).toBe('Bad request')
+            })
+        });
+        test('Comments should be served with the most recent comments first', () => {
+            return request(app).get('/api/articles/1/comments').expect(200)
+            .then(({ body }) => {
+                const comments = body
+                expect(comments).toBeSortedBy('created_at', { descending: true})
+            })
         });
     });
 });

@@ -6,7 +6,7 @@ const getArticles = (request, response) => {
     });
 }
 
-const getComments = (request, response) => {
+const getCommentsArticlesController = (request, response) => {
     readComments().then((comments) => {
         response.status(200).send(comments)
     })
@@ -25,4 +25,4 @@ const getArticleByIdController = (request, response, next) => {
 }
 
 
-module.exports = { getArticles, getArticleByIdController, getComments };
+module.exports = { getArticles, getArticleByIdController, getCommentsArticlesController };
