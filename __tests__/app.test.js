@@ -142,7 +142,7 @@ describe("/api/topics", () => {
                 })
         });
         test('Comments should be served with the most recent comments first', () => {
-            return request(app).get('/api/articles/1/comments').expect(200)
+            return request(app).get('/api/articles/2/comments').expect(200)
                 .then(({ body }) => {
                     const comments = body
                     expect(comments).toBeSortedBy('created_at', { descending: true })
@@ -157,15 +157,48 @@ describe('POST /api/articles/:article_id/comments ticket 7', () => {
             username: 'butter_bridge',
             body: 'This is a test comment.', 
         };
-        return request(app).post('/api/articles/2/comments').send(newComment)
+        return request(app).post('/api/articles/1/comments').send(newComment)
         .expect(201)
         .then(({ body }) => {
-            const postedComment = body.comment.rows[0]
-            console.log(postedComment);
+            const postedComment = body.comment
+            expect(postedComment).toHaveProperty('comment_id')
             expect(postedComment.author).toBe('butter_bridge');
             expect(postedComment.body).toBe('This is a test comment.');
-            expect(postedComment.article_id).toBe(2);
+            expect(postedComment.article_id).toBe(1);
             expect(postedComment.created_at).toBeTruthy(); 
         })
+    });
+    test('400: responds with an error for invalid article_id', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a test comment.', 
+        };
+        return request(app).post('/api/articles/apples/comments').send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request');
+            });
+    });
+    test('404: responds with an error when adding a comment to a non-existent article', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: 'This is a test comment.', 
+        };
+        return request(app).post('/api/articles/999/comments').send(newComment)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Article not found');
+            });
+    });
+    test('400: responds with an error for empty body', () => {
+        const newComment = {
+            username: 'icellusedkars',
+            body: '', 
+        };
+        return request(app).post('/api/articles/1/comments').send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Comment body cannot be empty');
+            });
     });
 });

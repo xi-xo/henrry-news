@@ -14,10 +14,14 @@ const postCommentToArticle = (request, response, next) => {
     const { article_id } = request.params
     const { username, body } = request.body
 
-    addCommentToArticle(article_id, username, body)
-    .then((newComment) => {
-        response.status(201).send({ comment: newComment})
+    const newComment = { article_id, username, body}
+
+    addCommentToArticle(newComment)
+    .then((newCommentRows) => {
+        const postedComment = newCommentRows[0]
+        response.status(201).send({ comment: postedComment})
     }).catch((err) => {
+        console.log(err);
         next(err)
     })
 

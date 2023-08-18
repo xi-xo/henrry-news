@@ -1,3 +1,4 @@
+const format = require('pg-format');
 const db = require('../db/connection');
 
 const getCommmentsByArticleId = (articleId) => {
@@ -8,10 +9,17 @@ const getCommmentsByArticleId = (articleId) => {
     })
 }
 
-const addCommentToArticle = (article_id, username, body) => {
-    return db.query(
-        'INSERT INTO comments (body, votes, author, article_id, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING comment_id, body, votes, author, article_id, created_at', [body, 0, username, article_id]
-    )
+const addCommentToArticle = (newComment) => {
+    if (!newComment || !newComment.body || !newComment.username) {
+        return Promise.reject({ status: 400, msg: 'Comment body cannot be empty' });
+    }
+    const {article_id, username, body} = newComment
+    const values = [[body, 0, username, article_id, new Date()]];
+    const queryStr = format('INSERT INTO comments (body, votes, author, article_id, created_at) VALUES %L RETURNING comment_id, body, votes, author, article_id, created_at', values);
+    return db.query(queryStr).then(({ rows}) => {
+        return rows
+        
+    })
 }
 
 module.exports = { getCommmentsByArticleId, addCommentToArticle }
