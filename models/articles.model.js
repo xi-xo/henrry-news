@@ -26,6 +26,19 @@ const getArticleById = (articleId) => {
         }
     })
 }
-module.exports = { readArticles, getArticleById, readComments };
+
+const updateArticleVotesById = (articleId, newVote) => {
+    const queryStr = 'UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *'
+    
+    const values = [newVote, articleId]
+    return db.query(queryStr, values).then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, msg: 'Article not found'})
+        }
+        return rows[0]
+    }) 
+}
+
+module.exports = { readArticles, getArticleById, readComments, updateArticleVotesById };
 
 

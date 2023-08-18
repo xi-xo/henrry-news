@@ -74,7 +74,7 @@ describe("/api/topics", () => {
             return request(app).get('/api/articles/bananas').expect(400)
                 .then(({ body }) => {
                     const msg = body.msg;
-                    expect(msg).toBe('Bad request')
+                    expect(msg).toBe('Invalid entry')
                 })
         });
 
@@ -138,7 +138,7 @@ describe("/api/topics", () => {
             return request(app).get('/api/articles/banana/comments').expect(400)
                 .then(({ body }) => {
                     const msg = body.msg
-                    expect(msg).toBe('Bad request')
+                    expect(msg).toBe('Invalid entry')
                 })
         });
         test('Comments should be served with the most recent comments first', () => {
@@ -155,34 +155,34 @@ describe('POST /api/articles/:article_id/comments ticket 7', () => {
     test('201: responds with the posted comment', () => {
         const newComment = {
             username: 'butter_bridge',
-            body: 'This is a test comment.', 
+            body: 'This is a test comment.',
         };
         return request(app).post('/api/articles/1/comments').send(newComment)
-        .expect(201)
-        .then(({ body }) => {
-            const postedComment = body.comment
-            expect(postedComment).toHaveProperty('comment_id')
-            expect(postedComment.author).toBe('butter_bridge');
-            expect(postedComment.body).toBe('This is a test comment.');
-            expect(postedComment.article_id).toBe(1);
-            expect(postedComment.created_at).toBeTruthy(); 
-        })
+            .expect(201)
+            .then(({ body }) => {
+                const postedComment = body.comment
+                expect(postedComment).toHaveProperty('comment_id')
+                expect(postedComment.author).toBe('butter_bridge');
+                expect(postedComment.body).toBe('This is a test comment.');
+                expect(postedComment.article_id).toBe(1);
+                expect(postedComment.created_at).toBeTruthy();
+            })
     });
     test('400: responds with an error for invalid article_id', () => {
         const newComment = {
             username: 'icellusedkars',
-            body: 'This is a test comment.', 
+            body: 'This is a test comment.',
         };
         return request(app).post('/api/articles/apples/comments').send(newComment)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe('Bad request');
+                expect(body.msg).toBe('Invalid entry');
             });
     });
     test('404: responds with an error when adding a comment to a non-existent article', () => {
         const newComment = {
             username: 'icellusedkars',
-            body: 'This is a test comment.', 
+            body: 'This is a test comment.',
         };
         return request(app).post('/api/articles/999/comments').send(newComment)
             .expect(404)
@@ -193,7 +193,7 @@ describe('POST /api/articles/:article_id/comments ticket 7', () => {
     test('400: responds with an error for empty body', () => {
         const newComment = {
             username: 'icellusedkars',
-            body: '', 
+            body: '',
         };
         return request(app).post('/api/articles/1/comments').send(newComment)
             .expect(400)
@@ -241,6 +241,48 @@ describe('POST /api/articles/:article_id/comments ticket 7', () => {
             .expect(404)
             .then(({ body }) => {
                 expect(body.msg).toBe('Username not found');
+            });
+    });
+});
+
+describe('PATCH /api/articles/:article_id ticket 8', () => {
+    test('updates article votes', () => {
+        const newVote = { newVote: 20 }
+        return request(app).patch('/api/articles/1').send(newVote)
+            .expect(200)
+            .then(({ body }) => {
+                expect(body).toEqual({
+                    article: {
+                        author: "butter_bridge",
+                        title: "Living in the shadow of a great man",
+                        article_id: 1,
+                        body: "I find this existence challenging",
+                        topic: "mitch",
+                        created_at: expect.any(String),
+                        votes: 120,
+                        article_img_url: expect.any(String)
+                    }
+                })
+            })
+    });
+    test('responds with 404 when article does not exist', () => {
+        const newVote = { newVote: 20 }
+        return request(app)
+            .patch('/api/articles/999')
+            .send(newVote)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Article not found');
+            });
+    });
+    test('responds with 400 when newVote is not a number', () => {
+        const newVote = { newVote: 'invalid' }
+        return request(app)
+            .patch('/api/articles/1')
+            .send(newVote)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Invalid entry');
             });
     });
 });
