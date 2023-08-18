@@ -21,7 +21,6 @@ const postCommentToArticle = (request, response, next) => {
         const postedComment = newCommentRows[0]
         response.status(201).send({ comment: postedComment})
     }).catch((err) => {
-        console.log(err);
         next(err)
     })
 
