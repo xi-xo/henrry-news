@@ -1,0 +1,4 @@
+- name: Set Timezone Action
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: 'Europe/London'
