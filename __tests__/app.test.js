@@ -198,7 +198,49 @@ describe('POST /api/articles/:article_id/comments ticket 7', () => {
         return request(app).post('/api/articles/1/comments').send(newComment)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe('Comment body cannot be empty');
+                expect(body.msg).toBe('Missing required field(s)');
+            });
+    });
+    test('201: ignores extra properties and responds with the posted comment', () => {
+        const newComment = {
+            username: 'butter_bridge',
+            body: 'This is a test comment.',
+            extraProperty: 'someValue'
+        };
+        return request(app)
+            .post('/api/articles/1/comments')
+            .send(newComment)
+            .expect(201)
+            .then(({ body }) => {
+                const postedComment = body.comment;
+                expect(postedComment).toHaveProperty('comment_id');
+                expect(postedComment.author).toBe('butter_bridge');
+                expect(postedComment.body).toBe('This is a test comment.');
+                expect(postedComment.article_id).toBe(1);
+                expect(postedComment.created_at).toBeTruthy();
+            });
+    });
+    test('400: responds with an error for missing required fields', () => {
+        const invalidComment = {}; // Missing 'username' and 'body'
+        return request(app)
+            .post('/api/articles/1/comments')
+            .send(invalidComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Missing required field(s)');
+            });
+    });
+    test('404: responds with an error for non-existent username', () => {
+        const newComment = {
+            username: 'non_existent_user',
+            body: 'This is a test comment.'
+        };
+        return request(app)
+            .post('/api/articles/1/comments')
+            .send(newComment)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Username not found');
             });
     });
 });

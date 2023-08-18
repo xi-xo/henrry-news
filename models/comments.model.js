@@ -11,7 +11,7 @@ const getCommmentsByArticleId = (articleId) => {
 
 const addCommentToArticle = (newComment) => {
     if (!newComment || !newComment.body || !newComment.username) {
-        return Promise.reject({ status: 400, msg: 'Comment body cannot be empty' });
+        return Promise.reject({ status: 400, msg: 'Missing required field(s)' });
     }
     const {article_id, username, body} = newComment
     const values = [[body, 0, username, article_id, new Date()]];
