@@ -1,6 +1,6 @@
 const handlePSQLErrors = (err, request, response, next) => {
     if (err.code === '22P02') {
-        return response.status(400).send({ msg: 'Invalid entry' });
+        return response.status(400).send({ msg: 'Invalid entry or Invalid artilce_id' });
     } else if (err.code === '23502') {
         return response.status(400).send({ msg: 'Missing required field(s)' });
     } else if (err.code === '23503') {

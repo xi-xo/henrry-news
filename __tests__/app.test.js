@@ -74,7 +74,7 @@ describe("/api/topics", () => {
             return request(app).get('/api/articles/bananas').expect(400)
                 .then(({ body }) => {
                     const msg = body.msg;
-                    expect(msg).toBe('Invalid entry')
+                    expect(msg).toBe('Invalid entry or Invalid artilce_id')
                 })
         });
 
@@ -138,7 +138,7 @@ describe("/api/topics", () => {
             return request(app).get('/api/articles/banana/comments').expect(400)
                 .then(({ body }) => {
                     const msg = body.msg
-                    expect(msg).toBe('Invalid entry')
+                    expect(msg).toBe('Invalid entry or Invalid artilce_id')
                 })
         });
         test('Comments should be served with the most recent comments first', () => {
@@ -176,7 +176,7 @@ describe('POST /api/articles/:article_id/comments ticket 7', () => {
         return request(app).post('/api/articles/apples/comments').send(newComment)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe('Invalid entry');
+                expect(body.msg).toBe('Invalid entry or Invalid artilce_id');
             });
     });
     test('404: responds with an error when adding a comment to a non-existent article', () => {
@@ -282,7 +282,17 @@ describe('PATCH /api/articles/:article_id ticket 8', () => {
             .send(newVote)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe('Invalid entry');
+                expect(body.msg).toBe('Invalid entry or Invalid artilce_id');
             });
+    });
+    test('responds with 400 when article_id is invalid', () => {
+        const newVote = {newVote: 20}
+        return request(app)
+        .patch('/api/articles/invalid_id')
+        .send(newVote)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Invalid entry or Invalid artilce_id')
+        })
     });
 });
